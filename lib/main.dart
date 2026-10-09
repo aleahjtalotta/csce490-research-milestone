@@ -1,27 +1,144 @@
 import 'package:flutter/material.dart';
-
 void main() {
-  runApp(const MyApp());
+  runApp(const SplitItApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SplitItApp extends StatelessWidget {
+  const SplitItApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: const Color(0xFFFFF5FA),
-        
-        body: const Center(
-          child: Text(
-            'Hello World! ',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF8B6BB3),
-            ),
+      title: 'SplitIt',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFB39DDB),
+        ),
+      ),
+      home: const SplitItHome(),
+    );
+  }
+}
+
+class SplitItHome extends StatelessWidget {
+  const SplitItHome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFFFF7FC),
+      appBar: AppBar(
+        title: const Text(
+          'SplitIt',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFE9DDF8),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Split your bill with ease!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 30),
+
+              const Text(
+                'Bill Amount',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+
+              const TextField(
+                keyboardType: TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: InputDecoration(
+                  prefixText: '\$',
+                  hintText: 'Enter bill amount',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 25),
+              const Text(
+                'Tip Percentage',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+
+              Row(
+                children: [
+                  for (final tip in ['15%', '18%', '20%'])
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          child: Text(tip),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+
+              const SizedBox(height: 25),
+
+              const Text(
+                'Number of People',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+
+              const TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Enter number of people',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              FilledButton(
+                onPressed: () {},
+                child: const Text('Calculate'),
+              ),
+
+              const SizedBox(height: 30),
+
+              const Card(
+                color: Color(0xFFE9DDF8),
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Each Person Pays',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '\$0.00',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
