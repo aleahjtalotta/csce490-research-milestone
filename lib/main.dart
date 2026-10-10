@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 void main() {
   runApp(const SplitItApp());
 }
@@ -13,17 +14,26 @@ class SplitItApp extends StatelessWidget {
       title: 'SplitIt',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFB39DDB),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFB39DDB)),
       ),
       home: const SplitItHome(),
     );
   }
 }
 
-class SplitItHome extends StatelessWidget {
+class SplitItHome extends StatefulWidget {
   const SplitItHome({super.key});
+
+  @override
+  State<SplitItHome> createState() => _SplitItHomeState();
+}
+
+class _SplitItHomeState extends State<SplitItHome> {
+  final billController = TextEditingController();
+  final peopleController = TextEditingController();
+
+  int selectedTip = 15;
+  double amountPerPerson = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +42,7 @@ class SplitItHome extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'SplitIt',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFFE9DDF8),
@@ -52,16 +60,11 @@ class SplitItHome extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              const Text(
-                'Bill Amount',
-                style: TextStyle(fontSize: 16),
-              ),
+              const Text('Bill Amount', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
 
               const TextField(
-                keyboardType: TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
                   prefixText: '\$',
                   hintText: 'Enter bill amount',
@@ -70,21 +73,27 @@ class SplitItHome extends StatelessWidget {
               ),
 
               const SizedBox(height: 25),
-              const Text(
-                'Tip Percentage',
-                style: TextStyle(fontSize: 16),
-              ),
+              const Text('Tip Percentage', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
 
               Row(
                 children: [
-                  for (final tip in ['15%', '18%', '20%'])
+                  for (final tip in [15, 18, 20])
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(4),
                         child: OutlinedButton(
-                          onPressed: () {},
-                          child: Text(tip),
+                          onPressed: () {
+                            setState(() {
+                              selectedTip = tip;
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: selectedTip == tip
+                                ? const Color(0xFFE9DDF8)
+                                : null,
+                          ),
+                          child: Text('$tip%'),
                         ),
                       ),
                     ),
@@ -93,13 +102,12 @@ class SplitItHome extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              const Text(
-                'Number of People',
-                style: TextStyle(fontSize: 16),
-              ),
+              const Text('Number of People', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
 
-              const TextField(
+              TextField(
+                controller: peopleController,
+
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Enter number of people',
@@ -108,24 +116,15 @@ class SplitItHome extends StatelessWidget {
               ),
 
               const SizedBox(height: 30),
-
-              FilledButton(
-                onPressed: () {},
-                child: const Text('Calculate'),
-              ),
-
+              FilledButton(onPressed: () {}, child: const Text('Calculate')),
               const SizedBox(height: 30),
-
               const Card(
                 color: Color(0xFFE9DDF8),
                 child: Padding(
                   padding: EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      Text(
-                        'Each Person Pays',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      Text('Each Person Pays', style: TextStyle(fontSize: 18)),
                       SizedBox(height: 10),
                       Text(
                         '\$0.00',
