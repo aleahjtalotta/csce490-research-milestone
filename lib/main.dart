@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 void main() {
   runApp(const SplitItApp());
 }
@@ -151,7 +151,7 @@ class _SplitItHomeState extends State<SplitItHome> {
                       Text('Each Person Pays', style: TextStyle(fontSize: 18)),
                       SizedBox(height: 10),
                       Text(
-                        '\$${amountPerPerson.toStringAsFixed(2)}',
+                      NumberFormat.currency(symbol: '\$').format(amountPerPerson),
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
