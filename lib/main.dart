@@ -35,6 +35,27 @@ class _SplitItHomeState extends State<SplitItHome> {
   int selectedTip = 15;
   double amountPerPerson = 0.0;
 
+  void calculateSplit() {
+    double bill = double.tryParse(billController.text) ?? 0;
+    int people = int.tryParse(peopleController.text) ?? 0;
+
+    if (bill <= 0 || !bill.isFinite || people <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid bill and number of people'),
+        ),
+      );
+      return;
+    }
+
+    double tipAmount = bill * selectedTip / 100;
+    double total = bill + tipAmount;
+
+    setState(() {
+      amountPerPerson = total / people;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +84,10 @@ class _SplitItHomeState extends State<SplitItHome> {
               const Text('Bill Amount', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
 
-              const TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
+                 TextField(
+                controller: billController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
                   prefixText: '\$',
                   hintText: 'Enter bill amount',
                   border: OutlineInputBorder(),
@@ -107,7 +129,6 @@ class _SplitItHomeState extends State<SplitItHome> {
 
               TextField(
                 controller: peopleController,
-
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Enter number of people',
@@ -116,9 +137,12 @@ class _SplitItHomeState extends State<SplitItHome> {
               ),
 
               const SizedBox(height: 30),
-              FilledButton(onPressed: () {}, child: const Text('Calculate')),
+              FilledButton(
+                onPressed: calculateSplit,
+                child: const Text('Calculate'),
+              ),
               const SizedBox(height: 30),
-              const Card(
+              Card(
                 color: Color(0xFFE9DDF8),
                 child: Padding(
                   padding: EdgeInsets.all(24),
@@ -127,7 +151,7 @@ class _SplitItHomeState extends State<SplitItHome> {
                       Text('Each Person Pays', style: TextStyle(fontSize: 18)),
                       SizedBox(height: 10),
                       Text(
-                        '\$0.00',
+                        '\$${amountPerPerson.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
